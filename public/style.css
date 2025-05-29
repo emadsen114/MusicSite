@@ -34,3 +34,18 @@ nav{
     margin-right: 5px;
     text-decoration: none;
 }
+
+
+label{
+    width: 150px;
+    display: inline-block;
+}
+.signUp-body{
+    text-align: center;
+    display: flex;
+}
+
+.created-h1{
+    color:pink;
+    text-align: center;
+}
