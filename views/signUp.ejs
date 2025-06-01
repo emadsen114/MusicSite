@@ -7,6 +7,11 @@
     <title>Sign Up</title>
 </head>
 <body class="signUp-body">
+    <div>
+        <%- include("partials/navbar") %>
+    </div>
+    <h1> Sign Up
+         </h1>
     <form method="POST" action="/signUp">
         <div>
             <label>First Name:</label>
@@ -24,10 +29,10 @@
             <label>Username:</label>
             <input type="text" name="username" required>
         </div>
-        <!-- <div>
+        <div>
             <label>Password:</label>
-            <input type="password" class="form-control" id="password" name="password" required>
-        </div> -->
+            <input type="password" name="password" required>
+        </div>
        <button id="signUp-submit">Submit</button>
     </form>
 

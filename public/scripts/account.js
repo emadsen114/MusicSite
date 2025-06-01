@@ -14,6 +14,13 @@ function validateAccount(e){
     if (!isValid){
         e.preventDefault();
     }
+    let eValid = validateUsername(e);
+    let uValid = validateEmail(e);
 
+}
 
+function validateEmail(e){
+    let emailValid = document.querySelector("input[name=email]").value;
+
+    
 }

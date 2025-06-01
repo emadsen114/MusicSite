@@ -2,6 +2,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mysql from 'mysql2/promise';
+import bcrypt from 'bcrypt';
+
 
 
 dotenv.config();
@@ -33,9 +35,38 @@ const conn = await pool.getConnection();
 app.get('/', (req, res) => {
   res.render('home.ejs');
 });
-
 app.get('/login', (req, res) => {
-    res.render('logIn.ejs');
+  res.render('logIn.ejs');
+});
+
+app.post('/login', async (req, res) => {
+    let username = req.body.username;
+    let password = req.body.password;
+    if(!username || !password){
+      return res.status(400).send("all fields must be filled")
+    }
+
+    try{
+      const[users] = await pool.query(
+        'SELECT * FROM users WHERE username = ?',
+        [username]
+      );
+      if(users.length === 0){
+        return res.status(401).send("invalid username or password");
+      }
+
+      let user = users[0];
+
+      let match = await bcrypt.compare(password, user.password);
+
+      if(!match){
+        return res.status(401).send("Invalid username or password")
+      }
+      res.send(`Welcome, ${user.firstName}!`);
+    } catch(err){
+      console.error('Login error:', err);
+      res.status(500).send('Server error.');
+    }
 });
 
 app.get('/signUp', (req, res) => {
@@ -43,17 +74,36 @@ app.get('/signUp', (req, res) => {
 });
 
 app.post('/signUp', async (req, res) => {
+
+  
   let fn = req.body.firstName;
   let ln = req.body.lastName;
   let email = req.body.email;
   let username = req.body.username;
-  let sql = `INSERT INTO account 
-  (firstName, lastName, email, username)
-  VALUES (?,?,?,?)`;
-  let sqlParams = [fn,ln,email, username];
-  const [rows] = await conn.query(sql, sqlParams);
-  res.render('created.ejs');
+  let password = req.body.password;
+  let hashPass = await bcrypt.hash(password, 10);
+  if (!username || !email ||!fn || !ln) {
+    return res.status(400).send('All fields are required');
+  }
 
+  try{
+    const [existing] = await pool.query('SELECT id FROM users WHERE username = ?', [username]);
+
+    if (existing.length > 0) {
+      return res.status(409).send('Username already taken.');
+    }
+    let sql = `INSERT INTO users 
+    (firstName, lastName, email, username, password)
+    VALUES (?,?,?,?, ?)`;
+    let sqlParams = [fn,ln,email, username, hashPass];
+    const [rows] = await conn.query(sql, sqlParams);
+    res.render('created.ejs');
+
+  } catch(err){
+    console.error('Signup error:', err);
+    res.status(500).send('Server error.');
+  }
+  
 });
 
 app.get('/dbTest', async (req, res) => {
