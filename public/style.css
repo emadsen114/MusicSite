@@ -124,3 +124,12 @@ label{
     background-color: #eee;
   }
   
+  .user-profile-div{
+    text-align: center;
+    align-items: center;
+  }
+
+  .nav-name{
+    text-decoration: none;
+    color:#edf2f4;
+  }

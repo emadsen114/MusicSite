@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Document</title>
@@ -11,18 +11,21 @@
     <!-- user profile picture  -->
     <!-- name  -->
     <%- include("partials/navbarLoggedIn") %>
-    <div>
-        <h1><%= user.firstName %></h1>
-        <h1> @<%= user.username %></h1>
+    <div class ="user-profile-div">
+        <div >
+        <h1><%= userProfile.firstName %></h1>
+        <h1> @<%= userProfile.username %></h1>
     </div>
     <div>
         <button> add friend </button>
     </div>
+    </div>
+    
     <!-- user name -->
     <!--  add friend button -->
     <!-- top album, top song, top artist -->
 
 
-    
+    <script src="/scripts/searchBar.js"></script>
 </body>
 </html>

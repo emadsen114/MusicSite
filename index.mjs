@@ -35,6 +35,10 @@ const conn = await pool.getConnection();
 
 
 
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
+});
 
 
 app.get('/', (req, res) => {
@@ -176,8 +180,8 @@ app.get('/profile/:id', async (req, res) => {
       return res.status(404).send('User not found');
     }
 
-    const user = results[0];
-    res.render('userProfile.ejs', { user });
+    const userProfile = results[0];
+    res.render('userProfile.ejs', { userProfile });
   } catch (err) {
     console.error('Profile error:', err);
     res.status(500).send('Server error');
