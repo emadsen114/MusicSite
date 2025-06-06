@@ -4,23 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/style.css">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Home</title>
 </head>
+
+  
 <body>
     <div>
-        <%- include("partials/navbar") %>
+        <%- include("partials/navbarLoggedIn") %>
     </div>
-    <div class="main-title">
-        SYNCHED
-    </div>
-    <div class ="main-para">
-        <h2>Designed to connect all music lovers, regardless of the platform. Get synced.</h2>
-    </div>
-
-<script src="/scripts/script.js"></script> 
-<!-- this is working!! -->
-
+    <span>Hello, <%= user.firstName %>!</span>
+    <script>
+        const searchInput = document.getElementById('user-search');
+        const resultsList = document.getElementById('search-results');
+        const form = document.getElementById('search-form');
+      
+        form.addEventListener('submit', e => e.preventDefault()); // disable full form submit
+      
+        searchInput.addEventListener('input', async () => {
+          const query = searchInput.value.trim();
+          console.log('Searching for:', query); // ✅ confirm typing is detected
+          if (!query) {
+            resultsList.innerHTML = '';
+            resultsList.style.display = 'none';
+            return;
+          }
+      
+          const res = await fetch(`/search-users?q=${encodeURIComponent(query)}`);
+          const users = await res.json();
+      
+          resultsList.innerHTML = '';
+          if (users.length > 0) {
+            users.forEach(user => {
+              const li = document.createElement('li');
+              li.textContent = user.username;
+              li.onclick = () => {
+                searchInput.value = user.username;
+                resultsList.innerHTML = '';
+                resultsList.style.display = 'none';
+                window.location.href = `/profile/${user.id}`;              };
+              resultsList.appendChild(li);
+            });
+            resultsList.style.display = 'block';
+          } else {
+            resultsList.style.display = 'none';
+          }
+        });
+      </script>
 
 </body>
 </html>
